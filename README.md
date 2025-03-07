@@ -1,25 +1,25 @@
-# ����
+# 概要
 
-makefile��Ȥä��ץ��������ȤΤҤʷ��Ȥ��ƤޤȤ�Ƥߤ���  
-���Υ�������[test shell�ΤҤʷ�](https://ippei8jp.github.io/memoBlog/2023/05/15/test_shell_1.html){:target="_blank"}  
-�����makefile�Ǥ���ˤǤ���褦��̵�����ե�����ʬ�䤷����  
-�ޤ�����������linux�Ķ�������ä����ɡ������Windows + MinGW-w64 ����Ѥ��Ƥ��롣  
+makefileを使ったプロジェクトのひな型としてまとめてみた。  
+元のソースは[test shellのひな型](https://ippei8jp.github.io/memoBlog/2023/05/15/test_shell_1.html)  
+これをmakefileでの例にできるように無理やりファイル分割した。  
+また、元記事はlinux環境前提だったけど、今回はWindows + MinGW-w64 を使用している。  
 
-���ޥ�ɥҥ��ȥ���䴰�Ȥ���Ȥ��Ƥʤ��ʤ��������ȼ��輫����  
-(�Ҥʷ��ʤΤǡ����ޥ�ɤ��Τ�Τ˰�̣�Ϥʤ�)  
-�Ĥ��Ǥ˺Ƕ��äƤߤ�(���ޥ��顩)���Х�å�¬��ˤ��б����Ƥߤ���  
+コマンドヒストリや補完とかも使えてなかなか便利だと自画自賛。  
+(ひな型なので、コマンドそのものに意味はない)  
+ついでに最近やってみた(イマサラ？)カバレッジ測定にも対応してみた。  
 
-# ��ȯ�Ķ�
+# 開発環境
 
-- ����ѥ��� MinGW-w64 Release of 14.2.0-rt_v12-rev1 [niXman/mingw-builds-binaries](https://github.com/niXman/mingw-builds-binaries/releases){:target="_blank"}   
-- make MSYS2�ǥ��󥹥ȡ��뤷����Τ�path���̤��ƥ��ޥ�ɥץ���ץȤ�����ѤǤ���褦�ˤ���  
+- コンパイラ MinGW-w64 Release of 14.2.0-rt_v12-rev1 [niXman/mingw-builds-binaries](https://github.com/niXman/mingw-builds-binaries/releases)   
+- make MSYS2でインストールしたものにpathを通してコマンドプロンプトから使用できるようにした  
 
 
-# �Ȥ���
+# 使い方
 
-make�������
-���Х�å�¬���Ѥ�build�������Ȥ��ϡ�makefile����Ƭ��``COVERAGE := 1`` ����ʬ��ͭ���ˤ��롣  
-make�� MSYS2�ǰʲ��Υ��ޥ�ɤǥ��󥹥ȡ���Ǥ��롣
+makeするだけ  
+カバレッジ測定用にbuildしたいときは、makefileの先頭の``COVERAGE := 1`` の部分を有効にする。  
+makeは MSYS2で以下のコマンドでインストールできる。
 ```
 pacman -S base-devel
     or
@@ -27,26 +27,26 @@ pacman -S make
 ```
 
 
-makefile�Ȥ��Ƥϡ���¸�ط��μ�ư�����Ȥ���ʸ�������ɤ�UTF-8�ˤ���Ȥ���
-�֤ɤ�������ä����פȤʤ꤬���ʤȤ������б����Ƥ�������  
+makefileとしては、依存関係の自動生成とか、文字コードをUTF-8にするとか、
+「どうやるんだっけ？」となりがちなところを対応しておいた。  
 
-# ���Х�å����ɽ����ˡ
-lcov��MSYS2�Τ�Τ�Ȥ���  
-lcov�Υ��󥹥ȡ����MSYS2����  
+# カバレッジ結果表示方法
+lcovはMSYS2のものを使う。  
+lcovのインストールはMSYS2から  
 ```
 pacman -S lcov
 ```
-�ǥ��󥹥ȡ���Ǥ���  
-(�������ݤʼ���Ҳ𤷤Ƥ���ڡ����⤢�뤱�ɡ����쥤�åѥĤ�OK)  
+でインストールできる  
+(色々面倒な手順を紹介しているページもあるけど、これイッパツでOK)  
 
-���Х�å�¬���Ѥ�build������¹Ԥ����ʲ��Υ��ޥ�ɤ�¹Ԥ����cov�ǥ��쥯�ȥ��html�ե����뤬��������롣  
+カバレッジ測定用にbuildした後実行し、以下のコマンドを実行すればcovディレクトリにhtmlファイルが生成される。  
 ```
 make cov
 ```
 
-> lcov��exe�ǤϤʤ�perl������ץȤʤΤǥ��ޥ�ɥץ���ץȤ���ľ�ܼ¹ԤǤ��ʤ���  
-> �ǡ�bash -c "lcov ��" �ȼ¹Ԥ���Τ����ɡ�  
-> ���Τޤޤ��ȥ��ޥ�������Ǽ¹Ԥ����find���ޥ�ɤ� C:\WINDOWS\system32\find.exe ��¹Ԥ��Ƥ��ޤ������ư��ʤ���
-> �����ǡ�PATH����Ƭ�� c:\msys64\usr\bin ���ɲä��Ƽ¹Ԥ���������ư���褦�ˤʤ롣  
-> (gcov�ˤ�path���̤äƤ�ɬ�פ�����Τǡ��̤äƤʤ��Ȥ����̤��Ƥ�������(MINGW_BIN_DIR ���ɲ�))
-> ������ꤹ��ΤϤ��ɤʤΤǡ�make��ͳ�Ǽ¹ԤǤ���褦�ˤ�����  
+> lcovはexeではなくperlスクリプトなのでコマンドプロンプトから直接実行できない。  
+> で、bash -c "lcov ～" と実行するのだけど、  
+> そのままだとコマンド内部で実行されるfindコマンドが C:\WINDOWS\system32\find.exe を実行してしまい正常に動作しない。
+> そこで、PATHの先頭に c:\msys64\usr\bin を追加して実行すると正常に動作するようになる。  
+> (gcovにもpathが通ってる必要があるので、通ってないときは通してください(MINGW_BIN_DIR を追加))
+> 逐一設定するのはめんどなので、make経由で実行できるようにした。  
